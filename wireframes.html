@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrowLog Wireframes</title>
+    <style>
+        :root {
+            --bg: #1a1a1a;
+            --surface: #262626;
+            --surface-hover: #333333;
+            --primary: #4CAF50;
+            --primary-light: #81C784;
+            --text: #ffffff;
+            --text-secondary: #a0a0a0;
+            --border: #404040;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: var(--text);
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+            overflow-x: auto;
+            min-height: 100vh;
+        }
+
+        .phone-frame {
+            min-width: 320px;
+            width: 320px;
+            height: 650px;
+            background-color: var(--bg);
+            border-radius: 40px;
+            border: 8px solid #333;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        /* Notch */
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 25px;
+            background-color: #333;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            z-index: 10;
+        }
+
+        .header {
+            padding: 40px 20px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg);
+            z-index: 5;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .premium-badge {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--primary-light);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        /* Dashboard specific */
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: var(--surface);
+            padding: 16px;
+            border-radius: 16px;
+        }
+
+        .stat-val {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .see-all {
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .plant-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .plant-img {
+            width: 60px;
+            height: 60px;
+            background: #444;
+            border-radius: 12px;
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 24px;
+        }
+
+        .plant-info {
+            flex: 1;
+        }
+
+        .plant-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .plant-species {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .water-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .status-urgent {
+            background: rgba(244, 67, 54, 0.15);
+            color: #EF5350;
+        }
+
+        .status-ok {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--primary-light);
+        }
+
+        /* Detail Screen Specific */
+        .hero-img {
+            height: 200px;
+            background: #444;
+            margin: -20px -20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.5);
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--surface-hover);
+            color: white;
+        }
+
+        .timeline {
+            border-left: 2px solid var(--border);
+            margin-left: 10px;
+            padding-left: 20px;
+            margin-top: 20px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -27px;
+            top: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 2px solid var(--primary);
+        }
+
+        .timeline-date {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .timeline-content {
+            background: var(--surface);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        
+        .timeline-img {
+            width: 100%;
+            height: 100px;
+            background: #444;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        /* Export Screen Specific */
+        .export-card {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .export-brand {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            opacity: 0.8;
+        }
+
+        .export-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .export-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .comparison {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .comp-img {
+            flex: 1;
+            aspect-ratio: 1;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .comp-label {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(0,0,0,0.6);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+        
+        .export-metric {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .export-option {
+            background: var(--surface);
+            padding: 16px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+        
+        .export-option.active {
+            border-color: var(--primary);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        /* Add Dialog */
+        .scrim {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .bottom-sheet {
+            background: #222;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            padding: 24px;
+            min-height: 400px;
+        }
+
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: #555;
+            border-radius: 2px;
+            margin: 0 auto 24px;
+        }
+
+        .camera-view {
+            width: 100%;
+            height: 200px;
+            background: #111;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #444;
+        }
+
+        .capture-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: white;
+            border: 4px solid #333;
+            position: absolute;
+            bottom: -30px;
+        }
+
+        .input-field {
+            background: var(--surface);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            color: var(--text);
+            font-size: 16px;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 15px; /* for safe area */
+            z-index: 10;
+        }
+
+        .nav-item {
+            color: var(--text-secondary);
+            font-size: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            background: currentColor;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+        }
+
+        .fab {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            transform: translateY(-10px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+        
+        .screen-label {
+            text-align: center;
+            color: #888;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: Dashboard -->
+    <div>
+        <div class="screen-label">1. Dashboard (Home)</div>
+        <div class="phone-frame">
+            <div class="header">
+                <h1>GrowLog</h1>
+                <div class="premium-badge">GARDEN</div>
+            </div>
+            
+            <div class="content">
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-val">4</div>
+                        <div class="stat-label">Plants Tracked</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val">2</div>
+                        <div class="stat-label">Needs Water</div>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <span>Needs Attention</span>
+                </div>
+
+                <div class="plant-card">
+                    <div class="plant-img">🌿</div>
+                    <div class="plant-info">
+                        <div class="plant-name">Monstera Deliciosa</div>
+                        <div class="plant-species">Living Room</div>
+                        <div class="water-status status-urgent">💧 Water Today</div>
+                    </div>
+                </div>
+                
+                <div class="plant-card">
+                    <div class="plant-img">🪴</div>
+                    <div class="plant-info">
+                        <div class="plant-name">Fiddle Leaf Fig</div>
+                        <div class="plant-species">Bedroom Window</div>
+                        <div class="water-status status-urgent">💧 1 Day Overdue</div>
+                    </div>
+                </div>
+
+                <div class="section-title" style="margin-top: 24px;">
+                    <span>Healthy</span>
+                    <span class="see-all">See All</span>
+                </div>
+
+                <div class="plant-card">
+                    <div class="plant-img">🌵</div>
+                    <div class="plant-info">
+                        <div class="plant-name">Snake Plant</div>
+                        <div class="plant-species">Office</div>
+                        <div class="water-status status-ok">✓ Watered 3d ago</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="navbar">
+                <div class="nav-item active">
+                    <div class="nav-icon" style="background-color: currentColor; width: 20px; height: 20px; border-radius: 4px; box-shadow: inset 0 0 0 2px;"></div>
+                    Home
+                </div>
+                <div class="fab">+</div>
+                <div class="nav-item">
+                    <div class="nav-icon" style="background-color: transparent; width: 20px; height: 20px; border-radius: 10px; border: 2px solid currentColor;"></div>
+                    Profile
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: Plant Detail & Growth -->
+    <div>
+        <div class="screen-label">2. Plant Detail & History</div>
+        <div class="phone-frame">
+            <div class="content" style="padding: 0; padding-bottom: 80px;">
+                <div class="hero-img">
+                    <div class="back-btn">←</div>
+                    <span style="font-size: 64px;">🌿</span>
+                </div>
+                
+                <div style="padding: 0 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <h2 style="font-size: 24px; margin-bottom: 4px;">Monstera Deliciosa</h2>
+                            <p style="color: var(--text-secondary);">Living Room • Repotted May '23</p>
+                        </div>
+                    </div>
+
+                    <div class="action-row">
+                        <div class="btn btn-primary">💧 Log Water</div>
+                        <div class="btn btn-secondary">📸 Log Growth</div>
+                    </div>
+
+                    <div class="section-title" style="margin-top: 32px;">
+                        <span>Care Guide</span>
+                        <span class="premium-badge">PRO</span>
+                    </div>
+                    <div style="background: var(--surface); padding: 16px; border-radius: 12px; font-size: 14px; margin-bottom: 24px;">
+                        Prefers bright, indirect light. Allow top 2 inches of soil to dry out between waterings. Current schedule: <b>Every 7 days</b>.
+                    </div>
+
+                    <div class="section-title">
+                        <span>History</span>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Today, 9:41 AM</div>
+                            <div class="timeline-content">
+                                💧 Watered
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Nov 12, 2023</div>
+                            <div class="timeline-content">
+                                📸 Growth update recorded
+                                <div class="timeline-img" style="display: flex; align-items: center; justify-content: center;">
+                                    <span>New leaf unfurling! +2cm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Nov 5, 2023</div>
+                            <div class="timeline-content">
+                                💧 Watered
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SCREEN 3: Viral Export Card -->
+    <div>
+        <div class="screen-label">3. Viral Export (Instagram Share)</div>
+        <div class="phone-frame">
+            <div class="header">
+                <div>←</div>
+                <h1>Share Growth</h1>
+                <div style="width: 24px;"></div>
+            </div>
+            
+            <div class="content">
+                <div class="export-card">
+                    <div class="export-brand">GrowLog</div>
+                    <div class="export-title">6-Month Journey</div>
+                    <div class="export-subtitle">Monstera Deliciosa</div>
+                    
+                    <div class="comparison">
+                        <div class="comp-img">
+                            <span style="font-size: 40px;">🌱</span>
+                            <div class="comp-label">May 2023</div>
+                        </div>
+                        <div class="comp-img">
+                            <span style="font-size: 40px;">🌿</span>
+                            <div class="comp-label">Nov 2023</div>
+                        </div>
+                    </div>
+                    
+                    <div class="export-metric">
+                        <div>
+                            <div style="font-size: 12px; opacity: 0.8;">Growth</div>
+                            <div style="font-weight: 700; font-size: 18px;">+14.5 cm</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 12px; opacity: 0.8;">New Leaves</div>
+                            <div style="font-weight: 700; font-size: 18px;">3</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">Format Options</div>
+                <div class="export-options" style="margin-bottom: 24px;">
+                    <div class="export-option active">
+                        <div style="font-size: 24px; margin-bottom: 8px;">📷</div>
+                        <div style="font-weight: 600; font-size: 14px;">Before / After</div>
+                    </div>
+                    <div class="export-option">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🎞️</div>
+                        <div style="font-weight: 600; font-size: 14px;">Timelapse Video</div>
+                        <div style="font-size: 10px; color: var(--primary); margin-top: 4px;">Best for Reels</div>
+                    </div>
+                </div>
+                
+                <div class="btn btn-primary" style="width: 100%;">Share to Instagram</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 4: Add Flow / Camera -->
+    <div>
+        <div class="screen-label">4. Add Plant (Camera Flow)</div>
+        <div class="phone-frame">
+            <!-- Background Dashboard mocked out behind scrim -->
+            <div class="header" style="opacity: 0.3;">
+                <h1>GrowLog</h1>
+            </div>
+            <div class="content" style="opacity: 0.3;">
+                <div class="stats-row">
+                    <div class="stat-card"></div>
+                    <div class="stat-card"></div>
+                </div>
+            </div>
+            
+            <div class="scrim">
+                <div class="bottom-sheet">
+                    <div class="sheet-handle"></div>
+                    <h2 style="margin-bottom: 20px;">Add New Plant</h2>
+                    
+                    <div class="camera-view">
+                        <div style="text-align: center; color: #888;">
+                            <div>📷</div>
+                            <div style="font-size: 14px; margin-top: 8px;">Tap to frame plant</div>
+                        </div>
+                        <div class="capture-btn"></div>
+                    </div>
+                    
+                    <div style="margin-top: 40px;">
+                        <div class="input-field" style="color: #666;">Plant Name (e.g., Fred)</div>
+                        <div class="input-field" style="color: #666;">Species (Optional)</div>
+                    </div>
+                    
+                    <div class="btn btn-primary" style="margin-top: 12px; opacity: 0.5;">Next</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
