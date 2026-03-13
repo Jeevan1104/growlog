@@ -23,8 +23,13 @@ export default function LoginPage() {
 
   const handleGoogle = async () => {
     setGoogleLoading(true);
-    await signInWithGoogle();
-    setGoogleLoading(false);
+    setError('');
+    try {
+      await signInWithGoogle();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Google sign-in failed');
+      setGoogleLoading(false);
+    }
   };
 
   return (
