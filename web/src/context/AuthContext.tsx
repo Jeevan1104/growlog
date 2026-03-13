@@ -66,23 +66,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithGoogle = async () => {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    if (!supabaseUrl) {
-      throw new Error('VITE_SUPABASE_URL is not set — check Vercel environment variables');
-    }
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
-        skipBrowserRedirect: true,
       },
     });
     if (error) throw error;
-    if (data?.url) {
-      window.location.href = data.url;
-    } else {
-      throw new Error('No OAuth URL — enable Google provider in Supabase Dashboard → Auth → Providers');
-    }
   };
 
   const signOut = async () => {
