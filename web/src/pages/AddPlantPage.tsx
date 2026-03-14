@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 import { identifyPlant } from '../lib/plantid';
 import type { PlantIdentification } from '../lib/plantid';
 
-const FREE_PLANT_LIMIT = 2;
+const FREE_PLANT_LIMIT = 5;
 
 export default function AddPlantPage() {
   const navigate = useNavigate();
