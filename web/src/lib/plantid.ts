@@ -1,12 +1,13 @@
 const API_KEY = import.meta.env.VITE_PLANTID_API_KEY as string | undefined;
 const BASE = 'https://plant.id/api/v3';
-const DETAILS = 'common_names,description,best_light_condition,best_soil_type,common_pests,toxicity,watering';
+const DETAILS = 'common_names,description,best_light_condition,best_soil_type,common_pests,toxicity,watering,watering_general_benchmark';
 
 export interface PlantCare {
   description: string | null;
   light: string | null;
   soil: string | null;
   watering: string | null;
+  wateringAmount: string | null;
   toxicity: string | null;
   pests: string[] | null;
 }
@@ -26,7 +27,13 @@ function parseCare(d: Record<string, unknown>): PlantCare {
     watering: (() => {
       const w = d.watering as { min?: number; max?: number; unit?: string } | null;
       if (!w) return null;
-      return [w.min, w.max].filter(Boolean).join('–') + (w.unit ? ` ${w.unit}` : '');
+      const range = [w.min, w.max].filter(Boolean).join('–');
+      return range ? `Every ${range} ${w.unit ?? 'days'}` : null;
+    })(),
+    wateringAmount: (() => {
+      const b = d.watering_general_benchmark as { value?: string; unit?: string } | null;
+      if (b?.value) return `${b.value}${b.unit ? ' ' + b.unit : ''}`;
+      return null;
     })(),
     toxicity: (d.toxicity as { value?: string })?.value ?? null,
     pests: Array.isArray(d.common_pests)
