@@ -25,7 +25,18 @@ export default function AuthCallbackPage() {
           }
         });
     } else {
-      navigate('/dashboard', { replace: true });
+      // No code — wait for onAuthStateChange to pick up session from hash
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        if (session) {
+          subscription.unsubscribe();
+          navigate('/dashboard', { replace: true });
+        }
+      });
+      // Timeout fallback
+      setTimeout(() => {
+        subscription.unsubscribe();
+        navigate('/login', { replace: true });
+      }, 5000);
     }
   }, [navigate, searchParams]);
 
