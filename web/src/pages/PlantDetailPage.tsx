@@ -33,6 +33,7 @@ export default function PlantDetailPage() {
   const [error, setError] = useState('');
   const [care, setCare] = useState<PlantCare | null>(null);
   const [careLoading, setCareLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -102,6 +103,28 @@ export default function PlantDetailPage() {
     setWaterLoading(false);
   }
 
+  async function handleDeletePlant() {
+    if (!plant || !user) return;
+    if (!window.confirm(`Delete "${plant.name}"? This cannot be undone.`)) return;
+    setDeleteLoading(true);
+    await Promise.all([
+      supabase.from('watering_logs').delete().eq('plant_id', plant.id),
+      supabase.from('growth_logs').delete().eq('plant_id', plant.id),
+    ]);
+    await supabase.from('plants').delete().eq('id', plant.id);
+    navigate('/dashboard');
+  }
+
+  async function handleDeleteLog(entry: TimelineEntry) {
+    if (!window.confirm('Delete this log entry?')) return;
+    if (entry.type === 'water') {
+      await supabase.from('watering_logs').delete().eq('id', entry.log.id);
+    } else {
+      await supabase.from('growth_logs').delete().eq('id', entry.log.id);
+    }
+    await loadHistory();
+  }
+
   async function handleGrowthFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file || !plant || !user) return;
@@ -169,6 +192,15 @@ export default function PlantDetailPage() {
         )}
         <button className="back-btn" onClick={() => navigate(-1)}>
           ←
+        </button>
+        <button
+          className="back-btn"
+          style={{ right: 16, left: 'auto', background: 'rgba(239,83,80,0.85)' }}
+          onClick={handleDeletePlant}
+          disabled={deleteLoading}
+          title="Delete plant"
+        >
+          🗑️
         </button>
       </div>
 
@@ -251,9 +283,13 @@ export default function PlantDetailPage() {
                 {care.watering && (
                   <div style={{ display: 'flex', gap: 10 }}>
                     <span>💧</span>
-                    <p className="care-text"><strong>Watering:</strong> {care.watering}</p>
+                    <p className="care-text"><strong>Frequency:</strong> {care.watering}</p>
                   </div>
                 )}
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <span>🪣</span>
+                  <p className="care-text"><strong>Amount:</strong> {care.wateringAmount ?? 'Water until it drains from the bottom holes'}</p>
+                </div>
                 {care.toxicity && (
                   <div style={{ display: 'flex', gap: 10 }}>
                     <span>⚠️</span>
@@ -338,7 +374,7 @@ export default function PlantDetailPage() {
                 <p className="timeline-date">
                   {formatDate(entry.date)}
                 </p>
-                <div className="timeline-card">
+                <div className="timeline-card" style={{ position: 'relative' }}>
                   {entry.type === 'water' ? (
                     <p className="timeline-label">💧 Watered</p>
                   ) : (
@@ -351,6 +387,24 @@ export default function PlantDetailPage() {
                       />
                     </>
                   )}
+                  <button
+                    onClick={() => handleDeleteLog(entry)}
+                    style={{
+                      position: 'absolute',
+                      top: 8,
+                      right: 8,
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: 14,
+                      color: 'var(--text-sec)',
+                      padding: 4,
+                      lineHeight: 1,
+                    }}
+                    title="Delete log"
+                  >
+                    🗑️
+                  </button>
                 </div>
               </div>
             ))}
