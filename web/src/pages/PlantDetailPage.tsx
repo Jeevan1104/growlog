@@ -276,12 +276,46 @@ export default function PlantDetailPage() {
             </p>
           </div>
         )}
-        {/* Always show schedule */}
-        <div className="care-card">
-          <p className="care-text">
-            <strong>Your schedule:</strong> Water every {plant.water_frequency_days} day{plant.water_frequency_days !== 1 ? 's' : ''}
-          </p>
-        </div>
+        {/* Always show schedule + next watering */}
+        {(() => {
+          const lastWaterEntry = timeline.find((e) => e.type === 'water');
+          const lastWateredAt = lastWaterEntry ? new Date(lastWaterEntry.date) : null;
+          const nextWaterDate = lastWateredAt
+            ? new Date(lastWateredAt.getTime() + plant.water_frequency_days * 86400000)
+            : null;
+          const daysUntil = nextWaterDate
+            ? Math.ceil((nextWaterDate.getTime() - Date.now()) / 86400000)
+            : null;
+          const isOverdue = daysUntil !== null && daysUntil <= 0;
+          const isDueToday = daysUntil === 1 || daysUntil === 0;
+
+          return (
+            <div className="care-card" style={{ borderLeft: `3px solid ${isOverdue ? 'var(--urgent)' : isDueToday ? '#f59e0b' : 'var(--primary)'}` }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <p className="care-text">
+                  <strong>💧 Watering Schedule:</strong> Every {plant.water_frequency_days} day{plant.water_frequency_days !== 1 ? 's' : ''}
+                </p>
+                {lastWateredAt ? (
+                  <p className="care-text">
+                    <strong>Last watered:</strong> {lastWateredAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </p>
+                ) : (
+                  <p className="care-text" style={{ color: 'var(--urgent)' }}>Never watered — log your first watering!</p>
+                )}
+                {nextWaterDate && (
+                  <p className="care-text" style={{ color: isOverdue ? 'var(--urgent)' : isDueToday ? '#f59e0b' : 'var(--text-sec)' }}>
+                    <strong>Next watering:</strong>{' '}
+                    {isOverdue
+                      ? `Overdue by ${Math.abs(daysUntil!)} day${Math.abs(daysUntil!) !== 1 ? 's' : ''} ⚠️`
+                      : isDueToday
+                      ? 'Due today! 💧'
+                      : `In ${daysUntil} day${daysUntil !== 1 ? 's' : ''} (${nextWaterDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})`}
+                  </p>
+                )}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Timeline */}
         <div className="section-header" style={{ marginTop: 32 }}>

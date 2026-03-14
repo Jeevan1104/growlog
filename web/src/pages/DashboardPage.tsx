@@ -5,6 +5,34 @@ import { supabase } from '../lib/supabase';
 import type { Plant, WateringLog } from '../types';
 import BottomNav from '../components/BottomNav';
 
+function WaterNotificationBanner({ urgentPlants }: { urgentPlants: PlantWithStatus[] }) {
+  const [dismissed, setDismissed] = useState(false);
+  if (dismissed || urgentPlants.length === 0) return null;
+  return (
+    <div style={{
+      background: 'var(--urgent-bg)',
+      border: '1px solid var(--urgent)',
+      borderRadius: 12,
+      padding: '12px 16px',
+      marginBottom: 16,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 8,
+    }}>
+      <p style={{ fontSize: 14, color: 'var(--urgent)', margin: 0, fontWeight: 500 }}>
+        💧 {urgentPlants.length} plant{urgentPlants.length !== 1 ? 's' : ''} need{urgentPlants.length === 1 ? 's' : ''} watering now!
+      </p>
+      <button
+        onClick={() => setDismissed(true)}
+        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--urgent)', fontSize: 18, lineHeight: 1, padding: 0 }}
+      >
+        ×
+      </button>
+    </div>
+  );
+}
+
 interface PlantWithStatus extends Plant {
   waterStatus: string;
   isUrgent: boolean;
@@ -110,6 +138,7 @@ export default function DashboardPage() {
           </div>
         ) : (
           <>
+            <WaterNotificationBanner urgentPlants={urgent} />
             <div className="stats-row">
               <div className="stat-card">
                 <span className="stat-val">{plants.length}</span>
