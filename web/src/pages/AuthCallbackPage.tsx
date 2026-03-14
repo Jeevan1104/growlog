@@ -8,36 +8,39 @@ export default function AuthCallbackPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const code = searchParams.get('code');
     const errorParam = searchParams.get('error_description') ?? searchParams.get('error');
     if (errorParam) {
       setError(errorParam);
       return;
     }
-    if (code) {
-      supabase.auth
-        .exchangeCodeForSession(window.location.href)
-        .then(({ error }) => {
-          if (error) {
-            setError(error.message);
-          } else {
-            navigate('/dashboard', { replace: true });
-          }
-        });
-    } else {
-      // No code — wait for onAuthStateChange to pick up session from hash
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-        if (session) {
-          subscription.unsubscribe();
-          navigate('/dashboard', { replace: true });
-        }
-      });
-      // Timeout fallback
-      setTimeout(() => {
+
+    // detectSessionInUrl: true handles the #access_token hash automatically.
+    // Just wait for onAuthStateChange to fire with the session.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
         subscription.unsubscribe();
-        navigate('/login', { replace: true });
-      }, 5000);
-    }
+        navigate('/dashboard', { replace: true });
+      }
+    });
+
+    // Also check if session already exists (in case event already fired)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        subscription.unsubscribe();
+        navigate('/dashboard', { replace: true });
+      }
+    });
+
+    // Timeout fallback
+    const timer = setTimeout(() => {
+      subscription.unsubscribe();
+      navigate('/login', { replace: true });
+    }, 8000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timer);
+    };
   }, [navigate, searchParams]);
 
   if (error) {
